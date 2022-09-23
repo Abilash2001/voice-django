@@ -54,6 +54,9 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = ["http://localhost:4200"]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:4200']
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
 
 ROOT_URLCONF = 'voice.urls'
 

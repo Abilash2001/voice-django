@@ -1,7 +1,9 @@
 # from django.shortcuts import render
+import imp
 from account.models import Users
 import hashlib
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 class NewVoiceUser:
@@ -23,9 +25,10 @@ class NewVoiceUser:
             email = self.__newEmail,
             password = self.__newPassword
         )
-
+        
+@csrf_exempt
 def Signval(request):
-    print(request.POST.get('name'))
+    print(list(request.POST))
     if(request.method == "POST"):
         User  = NewVoiceUser(request)
         if(User.check_empty()==True):
