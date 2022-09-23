@@ -2,7 +2,7 @@
 
 from account.models import Users
 import hashlib
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -23,12 +23,12 @@ class NewVoiceUser:
         return Users.objects.create(
             name = self.__newUser,
             email = self.__newEmail,
+            phone = self.__newPhone,
             password = self.__newPassword
         )
 
 @csrf_exempt
 def Signval(request):
-    print(list(request.POST))
     if(request.method == "POST"):
         User  = NewVoiceUser(request)
         if(User.check_empty()==True):
@@ -37,8 +37,23 @@ def Signval(request):
                 User.add()
                 return HttpResponse("home")
             except:
-                return HttpResponseRedirect("signup?error=Something Went Wrong!!")
-        return HttpResponseRedirect("signup?error=Empty fields are not allowed")
+                return HttpResponse("signup?error=Something Went Wrong!!")
+        return HttpResponse("signup?error=Empty fields are not allowed")
+    return HttpResponse("signup?error=Invalid Request")
 
-    else:
-        return HttpResponseRedirect("signup?error=Invalid Request")
+
+@csrf_exempt
+def Logval(request):
+    if(request.method == "POST"):
+        phone = request.POST.get('phone')
+        temp_password = request.POST.get('password')
+        password = hashlib.sha256(temp_password.encode())
+        password = password.hexdigest()
+        try:
+            data = Users.objects.filter(phone=phone,password=password)
+            if(data.count() == 1):
+                return HttpResponse('profile')
+            return HttpResponse('login?error=Username or Password is invalid')
+        except:
+            return HttpResponse('login?error=Something went wrong')   
+    return HttpResponse("signup?error=Invalid Request")

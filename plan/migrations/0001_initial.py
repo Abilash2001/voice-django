@@ -12,13 +12,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Users',
+            name='Plans',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.TextField()),
-                ('phone', models.TextField(max_length=10)),
-                ('email', models.TextField()),
-                ('password', models.TextField()),
+                ('plan_price', models.TextField()),
+                ('plan_talktime', models.TextField()),
+                ('plan_data', models.TextField()),
+                ('plan_validity', models.TextField()),
+                ('plan_usage', models.IntegerField()),
             ],
         ),
     ]
