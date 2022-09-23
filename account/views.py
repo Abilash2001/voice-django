@@ -1,8 +1,8 @@
 # from django.shortcuts import render
-import imp
+
 from account.models import Users
 import hashlib
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -25,7 +25,7 @@ class NewVoiceUser:
             email = self.__newEmail,
             password = self.__newPassword
         )
-        
+
 @csrf_exempt
 def Signval(request):
     print(list(request.POST))
@@ -35,10 +35,10 @@ def Signval(request):
             User.encrypt()
             try:
                 User.add()
-                return HttpResponseRedirect("http://localhost:4200/home")
+                return HttpResponse("home")
             except:
-                return HttpResponseRedirect("http://localhost:4200/signup?error=Something Went Wrong!!")
-        return HttpResponseRedirect("http://localhost:4200/signup?error=Empty fields are not allowed")
+                return HttpResponseRedirect("signup?error=Something Went Wrong!!")
+        return HttpResponseRedirect("signup?error=Empty fields are not allowed")
 
     else:
-        return HttpResponseRedirect("http://localhost:4200/signup?error=Invalid Request")
+        return HttpResponseRedirect("signup?error=Invalid Request")
