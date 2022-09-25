@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path
 from account import views as ac
 from plan import views as pl
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('sign',ac.Signval),
     path('login',ac.Logval),
 
-    path('plan',pl.BestPlan)
+    path('plan',pl.BestPlan),
+    path('remplan',pl.DeletePlan),
+    path('addplan',pl.NewPlan)
 ]
