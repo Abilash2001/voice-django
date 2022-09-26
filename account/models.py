@@ -16,3 +16,9 @@ class Phone(models.Model):
     register = models.BooleanField(blank=False,null=False)
 
 
+class UsersDetails(models.Model):
+    id = models.AutoField(primary_key=True)
+    userId = models.IntegerField(blank=False,null=False)
+    userCat = models.CharField(max_length=1,blank=False,null=False)
+    joined = models.DateTimeField(auto_created=True,auto_now_add=True,blank=False,null=False)
+    
