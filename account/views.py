@@ -73,8 +73,11 @@ def Logval(request):
         try:
             data = Users.objects.filter(phone=phone,password=password)
             if(data.count() == 1):
-                return HttpResponse('profile')
-            return HttpResponse('login?error=Username or Password is invalid')
-        except:
-            return HttpResponse('login?error=Something went wrong')   
-    return HttpResponse("signup?error=Invalid Request")
+                if(data.values()[0].get('isAdmin')==True):
+                    return JsonResponse({"location":"admin","authenticate":True,"id":str(data.values()[0].get('id'))})
+                return JsonResponse({"location":'profile',"authenticate":True})
+            return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"location":'login?error=Something went wrong',"authenticate":False})   
+    return JsonResponse({"location":"signup?error=Invalid Request","authenticate":False})

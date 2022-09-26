@@ -7,6 +7,7 @@ class Users(models.Model):
     phone = models.TextField(blank=False,null=False,max_length=10)
     email = models.TextField(blank=False,null=False)
     password = models.TextField(blank=False,null=False)
+    isAdmin = models.BooleanField(blank=False,null=False)
 
 
 class Phone(models.Model):
