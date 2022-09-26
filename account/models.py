@@ -9,3 +9,9 @@ class Users(models.Model):
     password = models.TextField(blank=False,null=False)
 
 
+class Phone(models.Model):
+    id =  models.AutoField(primary_key=True)
+    phoneNo = models.TextField(blank=False,null=False)
+    register = models.BooleanField(blank=False,null=False)
+
+

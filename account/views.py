@@ -1,8 +1,8 @@
 # from django.shortcuts import render
 
-from account.models import Users
+from account.models import Users, Phone
 import hashlib
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -19,27 +19,48 @@ class NewVoiceUser:
     def encrypt(self) -> None:
         self.__newPassword = hashlib.sha256(self.__tempPass.encode())
         self.__newPassword = self.__newPassword.hexdigest()
+    def phoneno_exist(self) -> None:
+        if(Phone.objects.filter(phoneNo=self.__newPhone).count() == 0):
+            return False
+        return True
+    def check_exist(self) -> None:
+        data = Phone.objects.filter(phoneNo=self.__newPhone).values()
+        if(data.count()==0): return True
+        
+        if(data[0].get('register')==True):
+            return False
+        return True
     def add(self) -> None:
-        return Users.objects.create(
+        data = Phone.objects.get(phoneNo=self.__newPhone)
+        data.register = True
+        data.save()
+        Users.objects.create(
             name = self.__newUser,
             email = self.__newEmail,
             phone = self.__newPhone,
             password = self.__newPassword
         )
+        return self.__newPhone
+            
+
 
 @csrf_exempt
 def Signval(request):
     if(request.method == "POST"):
         User  = NewVoiceUser(request)
         if(User.check_empty()==True):
-            User.encrypt()
-            try:
-                User.add()
-                return HttpResponse("home")
-            except:
-                return HttpResponse("signup?error=Something Went Wrong!!")
-        return HttpResponse("signup?error=Empty fields are not allowed")
-    return HttpResponse("signup?error=Invalid Request")
+            if(User.check_exist()):
+                if(User.phoneno_exist()):
+                    User.encrypt()
+                    try:
+                        id= User.add()
+                        return JsonResponse({"route":"profile","authenticate":True,"id":str(id)})
+                    except:
+                        return JsonResponse({"route":"signup?error=Something Went Wrong!!","authenticate":False})
+                return JsonResponse({"location":"signup?error=Invalid PhoneNo","authenticate":"False"})
+            return JsonResponse({"location":"signup?error=Phone No is already registered","authenticate":False})
+        return JsonResponse({"location":"signup?error=Empty fields are not allowed","authenticate":False})
+    return JsonResponse({"location":"signup?error=Invalid Request","authenticate":False})
 
 
 @csrf_exempt
