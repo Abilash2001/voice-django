@@ -26,5 +26,7 @@ urlpatterns = [
 
     path('plan',pl.BestPlan),
     path('remplan',pl.DeletePlan),
-    path('addplan',pl.NewPlan)
+    path('addplan',pl.NewPlan),
+    path('editplan',pl.EditPlan),
+    path('fetchplan',pl.Fetchplan)
 ]
