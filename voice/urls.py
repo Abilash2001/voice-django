@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from account import views as ac
 from plan import views as pl
-
+from feedback import views as fb
+from dongle import views as dg
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -26,5 +27,16 @@ urlpatterns = [
 
     path('plan',pl.BestPlan),
     path('remplan',pl.DeletePlan),
-    path('addplan',pl.NewPlan)
+    path('addplan',pl.NewPlan),
+    path('editplan',pl.EditPlan),
+    path('fetchplan',pl.Fetchplan),
+
+    path('feedback',fb.FBVal),
+    path('Fetchfeedback',fb.FBdata),
+
+    path('dongle',dg.dBestPlan),
+    path('dongleplan',dg.NewDPlan),
+    path('delplan',dg.DeletePlan),
+    path('edit',dg.EditPlan),
+
 ]

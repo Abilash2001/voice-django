@@ -1,7 +1,7 @@
 import imp
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from plan.models import Plans
 
 # Create your views here.
@@ -43,6 +43,40 @@ def NewPlan(request):
                 plan_usage=0
             )
             return HttpResponse("admin?success=Successfully added a new plan")
+        except:
+            return HttpResponse("admin/newplan?error=Something went wrong")
+    return HttpResponse("admin/newplan?error=Invalid Request")
+
+def Fetchplan(request):
+    id = request.GET.get('id')
+    try:
+        data = Plans.objects.filter(id=id).values('id','plan_price','plan_talktime','plan_validity','plan_data')
+        result=[]
+        for i in data: result.append(i)
+        print(result)
+        return JsonResponse(result,safe=False)
+    except Exception as e:
+        print(e)
+        return HttpResponseRedirect("http://localhost:4200/admin/editplan?id="+id+"&error=Something went wrong!!")
+
+
+@csrf_exempt
+def EditPlan(request):
+    if(request.method=="POST"):
+        price = request.POST.get('price')
+        talktime = request.POST.get('talktime')
+        Data = request.POST.get('data')
+        validity = request.POST.get('validity')
+        id = request.POST.get('id')
+        try:
+            data =Plans.objects.get(id=id)
+            data.plan_price = price
+            data.plan_talktime = talktime
+            data.plan_validity=validity
+            data.plan_data=Data
+            #saving
+            data.save()
+            return HttpResponse("admin?success=Plan Updated Successfully")
         except:
             return HttpResponse("admin/newplan?error=Something went wrong")
     return HttpResponse("admin/newplan?error=Invalid Request")
