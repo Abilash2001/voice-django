@@ -1,9 +1,4 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
-
-# Create your views here.
-from django.db import models
-
 # Create your models here.
 from feedback.models import UserFeedback
 from django.views.decorators.csrf import csrf_exempt
@@ -31,7 +26,6 @@ class NewFeedback:
 
 @csrf_exempt
 def FBVal(request):
-    print(list(request.POST))
     if (request.method == "POST"):
         User1 = NewFeedback(request)
         if (User1.check_fbempty() == True):
@@ -46,14 +40,19 @@ def FBVal(request):
         return HttpResponseRedirect("feedback?error=Invalid Request")
 
 
+def FetchFeedback(request):
+    if(request.GET.get('fetchCount')!=None):
+        data=[]
+        data.append(UserFeedback.objects.filter(Star='1').count())
+        data.append(UserFeedback.objects.filter(Star='2').count())
+        data.append(UserFeedback.objects.filter(Star='3').count())
+        data.append(UserFeedback.objects.filter(Star='4').count())
+        data.append(UserFeedback.objects.filter(Star='5').count())
+        return HttpResponse(data)
+    else: 
+        data = UserFeedback.objects.filter(Star=request.GET.get('value')).values('Name','Email','Feedback')
+        result = []
+        for i in data: result.append(i)
+        return JsonResponse(result,safe=False)
 
-def FBdata(request):
-    if(request.GET.get('best')!=None):
-        data = UserFeedback.objects.values()
-    elif(request.GET.get('all')=='True'):
-        data =UserFeedback.objects.values()
-    else:
-        data = UserFeedback.objects.values('Email','Feedback')
-    result=[]
-    for i in data: result.append(i)
-    return JsonResponse(result,safe=False)
+

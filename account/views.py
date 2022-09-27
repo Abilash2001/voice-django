@@ -1,8 +1,8 @@
 # from django.shortcuts import render
 
-from account.models import Users, Phone
+from account.models import Users, Phone, UsersDetails
 import hashlib
-from django.http import  JsonResponse
+from django.http import  JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -48,9 +48,6 @@ class NewVoiceUser:
         data.save()
         return data.hashPhone
         
-        
-
-
 
 @csrf_exempt
 def Signval(request):
@@ -82,11 +79,61 @@ def Logval(request):
         try:
             data = Users.objects.filter(phone=phone,password=password)
             if(data.count() == 1):
+                hashid = hashlib.sha256(phone.encode())
+                hashid =hashid.hexdigest()
                 if(data.values()[0].get('isAdmin')==True):
-                    return JsonResponse({"location":"admin","authenticate":True,"id":str(hashlib.sha256(phone.encode()).hexdigest())})
-                return JsonResponse({"location":'profile',"authenticate":True,"id":str(hashlib.sha256(phone.encode().hexdigest()))})
+                    return JsonResponse({"location":"admin","authenticate":True,"id":str(hashid)})
+                return JsonResponse({"location":'profile',"authenticate":True,"id":str(hashid)})
             return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
         except Exception as e:
             print(e)
             return JsonResponse({"location":'login?error=Something went wrong',"authenticate":False})   
     return JsonResponse({"location":"signup?error=Invalid Request","authenticate":False})
+
+
+@csrf_exempt
+def AddAccount(request):
+    if(request.method == "POST"):
+        phoneNo = request.POST.get('phoneNo')
+        password = hashlib.sha256(request.POST.get('password').encode())
+        password = password.hexdigest()
+        try:
+            Users.objects.create(
+                name = "admin",
+                phone = phoneNo,
+                password = password,
+                isAdmin = True
+            )
+            return HttpResponse("admin?success=Successfully created a new account")
+        except:
+            return HttpResponse("admin?error=Something went wrong!!!")
+    return HttpResponse("admin?error=Invalid Request")
+
+
+def FetchCategory(request):
+    result= []
+    result.append(UsersDetails.objects.filter(userCat='p').count())
+    result.append(UsersDetails.objects.filter(userCat='P').count())
+    result.append(UsersDetails.objects.filter(userCat='d').count())
+    return HttpResponse(result)
+
+
+def FetchUserCount(request):
+    result=[0 for _ in range(12)]
+    data = UsersDetails.objects.order_by('joined').values('joined')
+    for i in range(len(data)):
+        match(data[i].get('joined').month):
+            case 1: result[0] +=1
+            case 2: result[1] +=1
+            case 3: result[2] +=1
+            case 4: result[3] +=1
+            case 5: result[4] +=1
+            case 6: result[5] +=1
+            case 7: result[6] +=1
+            case 8: result[7] +=1
+            case 9: result[8] +=1
+            case 10: result[9] +=1
+            case 11: result[10] +=1
+            case 12: result[11] +=1
+    return HttpResponse(result)
+

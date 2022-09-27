@@ -1,6 +1,5 @@
-import imp
+
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from plan.models import Plans
 
@@ -80,3 +79,4 @@ def EditPlan(request):
         except:
             return HttpResponse("admin/newplan?error=Something went wrong")
     return HttpResponse("admin/newplan?error=Invalid Request")
+

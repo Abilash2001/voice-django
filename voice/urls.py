@@ -24,19 +24,23 @@ urlpatterns = [
     
     path('sign',ac.Signval),
     path('login',ac.Logval),
+    path('newadmin',ac.AddAccount),
 
     path('plan',pl.BestPlan),
     path('remplan',pl.DeletePlan),
     path('addplan',pl.NewPlan),
     path('editplan',pl.EditPlan),
-    path('fetchplan',pl.Fetchplan),
 
     path('feedback',fb.FBVal),
-    path('Fetchfeedback',fb.FBdata),
+    path('getReview',fb.FetchFeedback),
 
     path('dongle',dg.dBestPlan),
     path('dongleplan',dg.NewDPlan),
     path('delplan',dg.DeletePlan),
     path('edit',dg.EditPlan),
+
+    path('fetchplan',pl.Fetchplan),
+    path('fetchCat',ac.FetchCategory),
+    path('usersCount',ac.FetchUserCount)
 
 ]
