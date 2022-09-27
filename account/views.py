@@ -2,7 +2,7 @@
 
 from account.models import Users, Phone
 import hashlib
-from django.http import HttpResponse, JsonResponse
+from django.http import  JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -40,8 +40,16 @@ class NewVoiceUser:
             phone = self.__newPhone,
             password = self.__newPassword
         )
-        return self.__newPhone
-            
+        return Users.objects.filter(phone=self.__newPhone).values()[0].get('id')
+    
+    def UpdateAndFetchHashPhone(self,id):
+        data = Phone.objects.get(phoneNo = self.__newPhone)
+        data.id = id
+        data.save()
+        return data.hashPhone
+        
+        
+
 
 
 @csrf_exempt
@@ -54,7 +62,8 @@ def Signval(request):
                     User.encrypt()
                     try:
                         id= User.add()
-                        return JsonResponse({"route":"profile","authenticate":True,"id":str(id)})
+                        hasphone = User.UpdateAndFetchHashPhone(id)
+                        return JsonResponse({"route":"profile","authenticate":True,"id":str(hasphone)})
                     except:
                         return JsonResponse({"route":"signup?error=Something Went Wrong!!","authenticate":False})
                 return JsonResponse({"location":"signup?error=Invalid PhoneNo","authenticate":"False"})
@@ -74,8 +83,8 @@ def Logval(request):
             data = Users.objects.filter(phone=phone,password=password)
             if(data.count() == 1):
                 if(data.values()[0].get('isAdmin')==True):
-                    return JsonResponse({"location":"admin","authenticate":True,"id":str(data.values()[0].get('id'))})
-                return JsonResponse({"location":'profile',"authenticate":True})
+                    return JsonResponse({"location":"admin","authenticate":True,"id":str(hashlib.sha256(phone.encode()).hexdigest())})
+                return JsonResponse({"location":'profile',"authenticate":True,"id":str(hashlib.sha256(phone.encode().hexdigest()))})
             return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
         except Exception as e:
             print(e)

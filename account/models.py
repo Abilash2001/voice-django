@@ -13,7 +13,9 @@ class Users(models.Model):
 class Phone(models.Model):
     id =  models.AutoField(primary_key=True)
     phoneNo = models.TextField(blank=False,null=False)
+    hashPhone = models.TextField(blank=False,null=False)
     register = models.BooleanField(blank=False,null=False)
+    userId  = models.IntegerField()
 
 
 class UsersDetails(models.Model):
