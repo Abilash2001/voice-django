@@ -38,13 +38,14 @@ class NewVoiceUser:
             name = self.__newUser,
             email = self.__newEmail,
             phone = self.__newPhone,
-            password = self.__newPassword
+            password = self.__newPassword,
+            isAdmin = False
         )
         return Users.objects.filter(phone=self.__newPhone).values()[0].get('id')
     
     def UpdateAndFetchHashPhone(self,id):
         data = Phone.objects.get(phoneNo = self.__newPhone)
-        data.id = id
+        data.userId = id
         data.save()
         return data.hashPhone
         
@@ -137,3 +138,28 @@ def FetchUserCount(request):
             case 12: result[11] +=1
     return HttpResponse(result)
 
+
+def CheckAdmin(request):
+    usid= request.GET.get('sid')
+    usaid = request.GET.get('said')
+    if(usid!=None):
+        try:
+            data = Phone.objects.filter(hashPhone = usid).values('userId')[0]
+            id = data.get('userId')
+            result = Users.objects.filter(id=id).values('isAdmin')[0]
+            print(result.get('isAdmin'))
+            if(result.get('isAdmin')==True):
+                return HttpResponse('admin')
+            return HttpResponse("home")
+        except:
+            return HttpResponse('checkadmin')
+    elif(usaid!=None):
+        try:
+            data = Users.objects.filter(isAdmin=True).values('phone')
+            for i in data:
+                getHashValue = hashlib.sha256(data.get('phone').encode())
+                getHashValue = getHashValue.hexdigest()
+                if(getHashValue==usaid):
+                    return HttpResponse("admin")
+        except:
+            return HttpResponse("home")

@@ -41,6 +41,7 @@ urlpatterns = [
 
     path('fetchplan',pl.Fetchplan),
     path('fetchCat',ac.FetchCategory),
-    path('usersCount',ac.FetchUserCount)
+    path('usersCount',ac.FetchUserCount),
+    path('fetchAdmin',ac.CheckAdmin),
 
 ]
