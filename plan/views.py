@@ -93,6 +93,9 @@ def RechargePlan(request):
                 userId = id,
                 planId = planId
             )
+            data = Plans.objects.get(id=id)
+            data.plan_usage+=1
+            data.save()
             return HttpResponse("connection/bank?plan=True")
         except Exception as e:
             print(e)

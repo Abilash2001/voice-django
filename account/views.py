@@ -3,6 +3,7 @@ from account.models import Users, Phone, UsersDetails, Connection
 import hashlib
 from django.http import  JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 class NewVoiceUser:
@@ -110,6 +111,7 @@ def AddAccount(request):
                 name = "admin",
                 phone = phoneNo,
                 password = password,
+                email="admin@voizfonica.com",
                 isAdmin = True
             )
             return HttpResponse("admin?success=Successfully created a new account")
@@ -158,18 +160,20 @@ def CheckAdmin(request):
             if(result.get('isAdmin')==True):
                 return HttpResponse('admin')
             return HttpResponse("home")
-        except:
+        except Exception as e:
+            print(e)
             return HttpResponse('checkadmin')
     elif(usaid!=None):
         try:
-            data = Users.objects.filter(isAdmin=True).values('phone')
-            for i in data:
-                getHashValue = hashlib.sha256(data.get('phone').encode())
-                getHashValue = getHashValue.hexdigest()
-                if(getHashValue==usaid):
-                    return HttpResponse("admin")
-        except:
-            return HttpResponse("home")
+            data = Users.objects.filter(name="admin").values('phone')[0]
+            tempHash = hashlib.sha256(data.get('phone').encode())
+            getHashValue = tempHash.hexdigest()
+            if(getHashValue==usaid):
+                return HttpResponse("admin")
+            return HttpResponse("login?error=Login to access the site")
+        except Exception as e:
+           print(e)
+           return HttpResponse("home")
 
 
 @csrf_exempt
