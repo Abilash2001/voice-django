@@ -1,8 +1,8 @@
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from plan.models import Plans
-
+from plan.models import Plans, Recharge
+from account.models import Phone
 # Create your views here.
 
 def BestPlan(request):
@@ -79,4 +79,24 @@ def EditPlan(request):
         except:
             return HttpResponse("admin/newplan?error=Something went wrong")
     return HttpResponse("admin/newplan?error=Invalid Request")
+
+
+
+@csrf_exempt
+def RechargePlan(request):
+    if(request.method == "POST"):
+        planId = request.POST.get("pid")
+        hashPhone= request.POST.get("id")
+        try:
+            id = Phone.objects.filter(hashPhone=hashPhone).values('userId')[0].get('userId')
+            Recharge.objects.create(
+                userId = id,
+                planId = planId
+            )
+            return HttpResponse("connection/bank?plan=True")
+        except Exception as e:
+            print(e)
+            return HttpResponse("home?error=Something Went Wrong")
+
+    return HttpResponse("home?error=Invalid Request")
 

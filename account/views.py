@@ -91,7 +91,7 @@ def Logval(request):
                 hashid =hashid.hexdigest()
                 if(data.values()[0].get('isAdmin')==True):
                     return JsonResponse({"location":"admin","authenticate":True,"id":str(hashid)})
-                return JsonResponse({"location":'home',"authenticate":True,"id":str(hashid)})
+                return JsonResponse({"location":'/home',"authenticate":True,"id":str(hashid)})
             return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
         except Exception as e:
             print(e)
