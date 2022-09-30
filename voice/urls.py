@@ -19,6 +19,7 @@ from account import views as ac
 from plan import views as pl
 from feedback import views as fb
 from dongle import views as dg
+from postpaid import views as p
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -45,6 +46,12 @@ urlpatterns = [
     path('fetchAdmin',ac.CheckAdmin),
 
     
-    path('connection',ac.Subscriber)
+    path('connection',ac.Subscriber),
+
+path('postplan',p.BestPlan),
+path('dltplan',p.DeletePlan),
+path('newpost',p.NewPlan),
+path('editpostplan',p.EditPlan),
+path('fetchpostplan',p.Fetchplan)
 
 ]
