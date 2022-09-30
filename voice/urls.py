@@ -44,4 +44,7 @@ urlpatterns = [
     path('usersCount',ac.FetchUserCount),
     path('fetchAdmin',ac.CheckAdmin),
 
+    
+    path('connection',ac.Subscriber)
+
 ]

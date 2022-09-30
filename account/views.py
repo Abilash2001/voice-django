@@ -1,6 +1,5 @@
 # from django.shortcuts import render
-
-from account.models import Users, Phone, UsersDetails
+from account.models import Users, Phone, UsersDetails, Connection
 import hashlib
 from django.http import  JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +11,7 @@ class NewVoiceUser:
         self.__newEmail = request.POST.get('email')
         self.__newPhone = request.POST.get('phone')
         self.__tempPass = request.POST.get('password')
+        self.__category = request.POST.get('usercat')
     def check_empty(self) -> bool:
         if(len(self.__newUser)!=0 and len(self.__newEmail)!=0 and len(self.__newPhone)!=0 and len(self.__tempPass)!=0):
             return True
@@ -48,6 +48,12 @@ class NewVoiceUser:
         data.userId = id
         data.save()
         return data.hashPhone
+    def Cat(self,id):
+        UsersDetails.objects.create(
+            userId=id,
+            userCat=self.__category
+        )
+
         
 
 @csrf_exempt
@@ -60,6 +66,7 @@ def Signval(request):
                     User.encrypt()
                     try:
                         id= User.add()
+                        User.Cat(id)
                         hasphone = User.UpdateAndFetchHashPhone(id)
                         return JsonResponse({"route":"profile","authenticate":True,"id":str(hasphone)})
                     except:
@@ -84,7 +91,7 @@ def Logval(request):
                 hashid =hashid.hexdigest()
                 if(data.values()[0].get('isAdmin')==True):
                     return JsonResponse({"location":"admin","authenticate":True,"id":str(hashid)})
-                return JsonResponse({"location":'profile',"authenticate":True,"id":str(hashid)})
+                return JsonResponse({"location":'home',"authenticate":True,"id":str(hashid)})
             return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
         except Exception as e:
             print(e)
@@ -163,3 +170,25 @@ def CheckAdmin(request):
                     return HttpResponse("admin")
         except:
             return HttpResponse("home")
+
+
+@csrf_exempt
+def Subscriber(request):
+    if(request.method == "POST"):
+        pincode = request.POST.get('pincode')
+        phoneNo = request.POST.get('phoneno')
+        state = request.POST.get('state')
+        address = request.POST.get('address')
+        try:
+            if(pincode!=None and phoneNo!=None and state!=None and address!=None):
+                Connection.objects.create(
+                    pincode=pincode,
+                    state=state,
+                    phoneNo=phoneNo,
+                    address=address
+                )
+                data = Phone.objects.filter(userId=0).values('phoneNo')[0]
+                return JsonResponse({"phone":data.get('phoneNo'),"location":"connection"})
+        except Exception as e:
+            return JsonResponse({"phone":"nil","location":"connection?error=Something went wrong!!!"})
+    return JsonResponse({"phone":"nil","location":"connection?error=Invalid Request"})

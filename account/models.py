@@ -1,5 +1,7 @@
 from statistics import mode
+from tokenize import blank_re
 from djongo import models
+from pyautogui import PRIMARY
 
 class Users(models.Model):
     id = models.AutoField(primary_key=True)
@@ -24,3 +26,10 @@ class UsersDetails(models.Model):
     userCat = models.CharField(max_length=1,blank=False,null=False)
     joined = models.DateTimeField(auto_created=True,auto_now_add=True,blank=False,null=False)
     
+
+class Connection(models.Model):
+    id = models.AutoField(primary_key=True)
+    pincode = models.TextField(blank=False,null=False)
+    phoneNo =models.TextField(blank=False,null=False)
+    state = models.TextField(blank=False,null=False)
+    address = models.TextField(blank=False,null=False)
