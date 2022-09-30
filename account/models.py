@@ -1,7 +1,6 @@
-from statistics import mode
-from tokenize import blank_re
+
 from djongo import models
-from pyautogui import PRIMARY
+
 
 class Users(models.Model):
     id = models.AutoField(primary_key=True)

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'plan',
     'feedback',
-    'dongle'
+    'dongle',
+    'postpaid'
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ CORS_ORIGIN_WHITELIST = ["http://localhost:4200","http://192.168.1.7:4200"]
 CSRF_TRUSTED_ORIGINS = ['http://localhost:4200',"http://192.168.1.7:4200"]
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
-ALLOWED_HOSTS = ['192.168.1.7','localhost']
+ALLOWED_HOSTS = ['192.168.1.7','localhost','127.0.0.1']
 
 ROOT_URLCONF = 'voice.urls'
 
