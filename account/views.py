@@ -69,7 +69,7 @@ def Signval(request):
                         id= User.add()
                         User.Cat(id)
                         hasphone = User.UpdateAndFetchHashPhone(id)
-                        return JsonResponse({"route":"profile","authenticate":True,"id":str(hasphone)})
+                        return JsonResponse({"route":"/home","authenticate":True,"id":str(hasphone)})
                     except:
                         return JsonResponse({"route":"signup?error=Something Went Wrong!!","authenticate":False})
                 return JsonResponse({"location":"signup?error=Invalid PhoneNo","authenticate":"False"})
