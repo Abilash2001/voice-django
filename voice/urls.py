@@ -20,6 +20,8 @@ from plan import views as pl
 from feedback import views as fb
 from dongle import views as dg
 from postpaid import views as p
+from chatbot import views as cb
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,6 +57,8 @@ urlpatterns = [
     path('editpostplan',p.EditPlan),
     path('fetchpostplan',p.Fetchplan),
 
-    path('recharge',pl.RechargePlan)
+    path('recharge',pl.RechargePlan),
+
+    path('chatResponse',cb.getResponse)
 
 ]
