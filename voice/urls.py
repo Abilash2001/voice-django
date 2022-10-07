@@ -21,7 +21,7 @@ from feedback import views as fb
 from dongle import views as dg
 from postpaid import views as p
 from chatbot import views as cb
-
+from query import views as q
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -59,6 +59,9 @@ urlpatterns = [
 
     path('recharge',pl.RechargePlan),
 
-    path('chatResponse',cb.getResponse)
+    path('chatResponse',cb.getResponse),
+    
+    path('queries',q.QueryVal),
+    path('getquery',q.FetchQuery)
 
 ]
