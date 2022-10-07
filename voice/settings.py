@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'plan',
     'feedback',
     'dongle',
-    'postpaid'
+    'postpaid',
+    'query'
 ]
 
 MIDDLEWARE = [

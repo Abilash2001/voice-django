@@ -20,6 +20,7 @@ from plan import views as pl
 from feedback import views as fb
 from dongle import views as dg
 from postpaid import views as p
+from query import views as q
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,6 +56,9 @@ urlpatterns = [
     path('editpostplan',p.EditPlan),
     path('fetchpostplan',p.Fetchplan),
 
-    path('recharge',pl.RechargePlan)
+    path('recharge',pl.RechargePlan),
+
+    path('queries',q.QueryVal),
+    path('getquery',q.FetchQuery)
 
 ]
