@@ -42,6 +42,7 @@ urlpatterns = [
     path('dongleplan',dg.NewDPlan),
     path('delplan',dg.DeletePlan),
     path('edit',dg.EditPlan),
+    path('fetch',dg.Fetchplan),
 
     path('fetchplan',pl.Fetchplan),
     path('fetchCat',ac.FetchCategory),
@@ -58,6 +59,8 @@ urlpatterns = [
     path('fetchpostplan',p.Fetchplan),
 
     path('recharge',pl.RechargePlan),
+    path('donglerecharge',dg.DongleRechargePlan),
+    path('postrecharge',p.PostRechargePlan),
 
     path('chatResponse',cb.getResponse),
     
