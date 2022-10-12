@@ -62,6 +62,11 @@ urlpatterns = [
     path('chatResponse',cb.getResponse),
     
     path('queries',q.QueryVal),
-    path('getquery',q.FetchQuery)
+    path('getquery',q.FetchQuery),
+
+    path('fetchName',pl.FetchName),
+    path("fetchHistoryPlan",pl.fetchUserHistoryPlan),
+
+    path('getphone',ac.getPhone)
 
 ]

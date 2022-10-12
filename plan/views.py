@@ -1,8 +1,7 @@
-
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from plan.models import Plans, Recharge
-from account.models import Phone
+from account.models import Phone, Users
 # Create your views here.
 
 def BestPlan(request):
@@ -103,3 +102,28 @@ def RechargePlan(request):
 
     return HttpResponse("home?error=Invalid Request")
 
+
+def FetchName(request):
+    hashPhone=request.GET.get('id')
+    result=[]
+    if(hashPhone!=None):
+        data = Phone.objects.filter(hashPhone=hashPhone).values('userId')[0]
+        userName= Users.objects.filter(id=data.get('userId')).values('name','id')
+        for i in userName: result.append(i)
+        return JsonResponse(result,safe=False)
+    return JsonResponse(result,safe=False)
+
+def fetchUserHistoryPlan(request):
+    uid = request.GET.get('id')
+    try:
+        data = Recharge.objects.filter(userId=uid).values("planId")
+        if(data.count()!=0):
+            result=[]
+            for item in range(data.count()):
+                planData= Plans.objects.filter(id=data[item].get('planId')).values('id','plan_price','plan_talktime','plan_validity','plan_data')[0]
+                result.append(planData)
+            return JsonResponse(result,safe=False)
+        return JsonResponse([{"plan_price":"0","plan_talktime":"0","plan_data":"0","plan_validity":"0","id":"0"}],safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse([{"plan_price":"0","plan_talktime":"0","plan_data":"0","plan_validity":"0","id":"0"}],safe=False)

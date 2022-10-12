@@ -69,7 +69,7 @@ def Signval(request):
                         id= User.add()
                         User.Cat(id)
                         hasphone = User.UpdateAndFetchHashPhone(id)
-                        return JsonResponse({"route":"home","authenticate":True,"id":str(hasphone)})
+                        return JsonResponse({"route":"profile","authenticate":True,"id":str(hasphone)})
                     except:
                         return JsonResponse({"route":"signup?error=Something Went Wrong!!","authenticate":False})
                 return JsonResponse({"location":"signup?error=Invalid PhoneNo","authenticate":"False"})
@@ -92,7 +92,7 @@ def Logval(request):
                 hashid =hashid.hexdigest()
                 if(data.values()[0].get('isAdmin')==True):
                     return JsonResponse({"location":"admin","authenticate":True,"id":str(hashid)})
-                return JsonResponse({"location":'/home',"authenticate":True,"id":str(hashid)})
+                return JsonResponse({"location":'profile',"authenticate":True,"id":str(hashid)})
             return JsonResponse({"location":'login?error=Username or Password is invalid',"authenticate":False})
         except Exception as e:
             print(e)
@@ -196,3 +196,11 @@ def Subscriber(request):
         except Exception as e:
             return JsonResponse({"phone":"nil","location":"connection?error=Something went wrong!!!"})
     return JsonResponse({"phone":"nil","location":"connection?error=Invalid Request"})
+
+
+def getPhone(request):
+    if(request.GET.get('phone')!=None):
+        data = Phone.objects.filter(phoneNo=request.GET.get('phone')).values('hashPhone')
+        if(data.count()!=0):
+            return JsonResponse({"id":data[0].get('hashPhone'),"location":"offers"})
+        return JsonResponse({"id":"0","location":"home?error=Invalid Number"})
