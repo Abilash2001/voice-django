@@ -66,10 +66,13 @@ urlpatterns = [
     
     path('queries',q.QueryVal),
     path('getquery',q.FetchQuery),
+     path('closeTick',q.closeTicket),
+    path('assignTick',q.assignTicket),
 
     path('fetchName',pl.FetchName),
     path("fetchHistoryPlan",pl.fetchUserHistoryPlan),
 
-    path('getphone',ac.getPhone)
+    path('getphone',ac.getPhone),
+
 
 ]

@@ -27,7 +27,10 @@ class NewQuery:
                 Email=self.__QEmail,
                 mobile_no=self.__QMobile,
                 Query = self.__QQuery,
-                a=self.__QCat)
+                a=self.__QCat,
+                admin_name="",
+                admin_id=0
+                )
             return "query?success=Query Submited Successfully"
         return "query?error=Invalid Number"
 
@@ -39,7 +42,6 @@ def QueryVal(request):
         if (User1.check_qempty() == True):
             try:
                 return HttpResponse(User1.qadd())
-                return HttpResponse("")
             except Exception as e:
                print(e)
                return HttpResponse("query?error=Something Went Wrong!!")
@@ -63,7 +65,7 @@ def FetchQuery(request):
             try:
                 userPhone = Users.objects.filter(id=request.GET.get('id')).values("phone")[0]
                 print(userPhone)
-                data = UserQuery.objects.filter(mobile_no=userPhone.get('phone')).values('a','Query')
+                data = UserQuery.objects.filter(mobile_no=userPhone.get('phone')).values('a','Query','admin_name')
                 print(data)
                 result=[]
                 for i in data:
@@ -72,8 +74,31 @@ def FetchQuery(request):
             except Exception as e:
                 print(e)
     else:
-        data = UserQuery.objects.filter(a=request.GET.get('value')).values('mobile_no','Email','Query')
+        data = UserQuery.objects.filter(a=request.GET.get('value')).values('mobile_no','Email','Query',"id","admin_name","admin_id")
         result = []
         for i in data: result.append(i)
         return JsonResponse(result,safe=False)
 
+
+def closeTicket(request):
+    ticketId=request.GET.get("id")
+    try:
+        UserQuery.objects.filter(id=ticketId).delete()
+        return HttpResponse("admin?success=Ticket Closed Successfully")
+    except:
+        return HttpResponse("admin?error=Cant able to close the ticket")
+
+
+
+def assignTicket(request):
+    uid = request.GET.get('uid')
+    aid = request.GET.get('id')
+    try:
+        data = UserQuery.objects.get(id=uid)
+        data.admin_id=aid
+        data.admin_name=Users.objects.filter(id=aid).values("name")[0].get('name')
+        data.save()
+        return HttpResponse("admin?success=Ticket assigned successfully")
+    except Exception as e:
+        print(e)
+        return HttpResponse("admin?error=Something went wrong")

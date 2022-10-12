@@ -40,6 +40,8 @@ class SearchEngine:
         ("vip number","fancy number"):["Voizfonica users could select VIP Number as per their choice from a range of premium mobile numbers.You can get it for free and for premium prizes."],
 
         ("after recharge","plan update"):["Please raise a ticket in query page and we will update about the tracking status in your profile page"],
+        
+        ("ok","ok gotit","got it","hmm","mmh"): ["😊","hmm...","ok","Glad you understood"]
 
 
     }

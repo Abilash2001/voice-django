@@ -9,7 +9,8 @@ class Users(models.Model):
     email = models.TextField(blank=False,null=False)
     password = models.TextField(blank=False,null=False)
     isAdmin = models.BooleanField(blank=False,null=False)
-
+    def __str__(self):
+        return self.name
 
 class Phone(models.Model):
     id =  models.AutoField(primary_key=True)
