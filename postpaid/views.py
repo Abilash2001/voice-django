@@ -6,7 +6,9 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from postpaid.models import Postpaidplan
+
+from account.models import Phone
+from postpaid.models import Postpaidplan, Recharge
 
 
 # Create your views here.
@@ -87,3 +89,24 @@ def EditPlan(request):
             return HttpResponse("admin/newpostpaid?error=Something went wrong")
     return HttpResponse("admin/newpostpaid?error=Invalid Request")
 
+
+@csrf_exempt
+def PostRechargePlan(request):
+    if(request.method == "POST"):
+        planId = request.POST.get("pid")
+        hashPhone= request.POST.get("id")
+        try:
+            id = Phone.objects.filter(hashPhone=hashPhone).values('userId')[0].get('userId')
+            Recharge.objects.create(
+                userId = id,
+                planId = planId
+            )
+            data = Postpaidplan.objects.get(id=planId)
+            data.plan_usage+=1
+            data.save()
+            return HttpResponse("connection/bank?plan=True")
+        except Exception as e:
+            print(e)
+            return HttpResponse("home?error=Something Went Wrong")
+
+    return HttpResponse("home?error=Invalid Request")
